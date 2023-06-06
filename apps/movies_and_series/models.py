@@ -18,11 +18,12 @@ class Genre(models.Model):
 class Director(models.Model):
     first_name = models.CharField(verbose_name='Имя', max_length=128)
     last_name = models.CharField(verbose_name='Фамилия', max_length=128)
-    date_of_birth = models.DateField(verbose_name='Дата рождения', auto_now_add=True)
-    biography = models.CharField(verbose_name='Биография', max_length=512)
+    date_of_birth = models.DateField(verbose_name='Дата рождения', auto_now_add=False)
     photo = models.ImageField(verbose_name='Фото',
                               upload_to=upload_instance,
-                              blank=True, null=True)
+                              blank=False, null=False)
+    biography = models.CharField(verbose_name='Биография', max_length=512)
+
     # movie =
     # tv_shows =
 
@@ -37,10 +38,10 @@ class Director(models.Model):
 class Actor(models.Model):
     first_name = models.CharField(verbose_name='Имя', max_length=128)
     last_name = models.CharField(verbose_name='Фамилия', max_length=128)
-    date_of_birth = models.DateField(verbose_name='Дата рождения', auto_now_add=True)
+    date_of_birth = models.DateField(verbose_name='Дата рождения', auto_now_add=False)
     photo = models.ImageField(verbose_name='Фото',
                               upload_to=upload_instance,
-                              blank=True, null=True)
+                              blank=False, null=False)
     biography = models.CharField(verbose_name='Биография', max_length=512)
     # movie =
     # tv_shows =
@@ -63,7 +64,7 @@ class Movie(models.Model):
                                          (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     trailer = models.URLField(verbose_name='Трейлер')
     description = models.CharField(verbose_name='Описание', max_length=512)
-    release_date = models.DateField(verbose_name='Дата выхода на сайте', default=timezone.now)
+    release_date = models.DateField(verbose_name='Дата выхода на сайте', null=True, blank=True)
     genre = models.ManyToManyField(verbose_name='Жанр',
                                    to='Genre')
     director = models.ManyToManyField(verbose_name='Режиссер',
@@ -79,6 +80,7 @@ class Movie(models.Model):
     def __str__(self):
         return f'{self.title}'
 
+
 class TVShow(models.Model):
     title = models.CharField(verbose_name='Название', max_length=128)
     poster = models.ImageField(verbose_name='Постер',
@@ -87,7 +89,7 @@ class TVShow(models.Model):
     season = models.IntegerField(verbose_name='Номер сезона')
     trailer = models.URLField(verbose_name='Трейлер')
     description = models.CharField(verbose_name='Описание', max_length=512)
-    release_date = models.DateField(verbose_name='Дата выхода на сайте', default=timezone.now)
+    release_date = models.DateField(verbose_name='Дата выхода на сайте', null=True, blank=True)
     genre = models.ManyToManyField(verbose_name='Жанр',
                                    to='Genre')
     director = models.ManyToManyField(verbose_name='Режиссер',
@@ -110,6 +112,12 @@ class Episode(models.Model):
                                       on_delete=models.CASCADE,
                                       related_name='episodes')
     number = models.IntegerField(verbose_name='Номер эпизода')
+    poster = models.ImageField(verbose_name='Постер',
+                               upload_to=upload_instance,
+                               blank=False, null=False)
+    trailer = models.FileField(verbose_name='Трайлер эпизода', upload_to=videos_uploaded, null=True, blank=True,
+                               validators=[FileExtensionValidator
+                                           (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     title = models.CharField(verbose_name='Название', null=True, blank=True)
     episode = models.FileField(verbose_name='Эпизод', upload_to=videos_uploaded, null=False,
                                validators=[FileExtensionValidator

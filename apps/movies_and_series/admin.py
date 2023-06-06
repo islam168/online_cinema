@@ -20,7 +20,6 @@ class MovieAdmin(admin.ModelAdmin):
     get_poster.short_description = 'Постер'
 
     def get_movie(self, obj):
-        print(obj.movie)
         if not obj.movie:
             return "Фильм ещё не загружен"
         else:
@@ -76,31 +75,51 @@ class TVShowAdmin(admin.ModelAdmin):
 
 @admin.register(Episode)
 class EpisodeAdmin(admin.ModelAdmin):
-    list_display = ('tv_show_title', 'number', 'title', 'get_episode')
+    list_display = ('tv_show_title', 'number', 'title', 'get_trailer', 'get_episode')
     search_fields = ['tv_show_title']
 
     def get_episode(self, obj):
-        return format_html(f'<video width="250" height="150" controls="controls">'
+        return format_html(f'<video width="250" height="150" controls="controls" poster="{obj.poster.url}">'
                            f'<source src="/media/{obj.episode}" type="video/mp4;">'
                            f'</video>')
 
     get_episode.short_description = 'Эпизод'
 
-    def get_director(self, obj):
-        return ', '.join([str(director) for director in obj.director.all()])
+    def get_trailer(self, obj):
+        if not obj.trailer:
+            return "Нет трейлера к эпизоду"
+        else:
+            return format_html(f'<video width="250" height="150" controls="controls">'
+                               f'<source src="/media/{obj.trailer}" type="video/mp4;">'
+                               f'</video>')
 
-    get_director.short_description = 'Режиссер'
+    get_episode.short_description = 'Эпизод'
 
-    def get_genre(self, obj):
-        return ', '.join([str(genre) for genre in obj.genre.all()])
 
-    get_genre.short_description = 'Жанр'
 
-    def get_actor(self, obj):
-        return ', '.join([str(actor) for actor in obj.actor.all()])
+@admin.register(Director)
+class DirectorAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'date_of_birth', 'get_photo', 'biography')
+    search_fields = ['tv_show_title']
 
-    get_actor.short_description = 'Актёр'
+    def get_photo(self, obj):
+        return format_html(f'<img src="{obj.photo.url}" '
+                           f'width="100" height="150" />')
+
+    get_photo.short_description = 'Фото'
+
+
+@admin.register(Actor)
+class ActorAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'date_of_birth', 'get_photo',  'biography')
+    search_fields = ['tv_show_title']
+
+    def get_photo(self, obj):
+        return format_html(f'<img src="{obj.photo.url}" '
+                           f'width="180" height="150" />')
+
+    get_photo.short_description = 'Фото'
+
+
 admin.site.register(Genre)
-admin.site.register(Director)
-admin.site.register(Actor)
 
