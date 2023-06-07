@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-
 from .models import Movie, TVShow, Genre, Actor, Director, Episode
+from apps.users.models import Purchase
+from .services import get_content
 
 
 class GenreSerializers(ModelSerializer):
@@ -34,33 +35,36 @@ class MovieDetailSerializers(ModelSerializer):
     genre = GenreSerializers(many=True, read_only=True)
     actor = ActorSerializers(many=True, read_only=True)
     director = DirectorSerializers(many=True, read_only=True)
-    movie = serializers.SerializerMethodField()
+    content = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
-        fields = ('title', 'poster', 'movie', 'description', 'trailer',
+        fields = ('title', 'poster', 'content', 'description', 'trailer',
                   'release_date', 'genre', 'director', 'actor', 'age_rating')
 
-    def get_movie(self, obj):
-        if self.context['request'].user.is_authenticated:
-            return f'http://127.0.0.1:8000{obj.movie.url}'
+    def get_content(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            purchase = list(Purchase.objects.filter(user=user.id))
+            return get_content(user, purchase, obj)
         else:
-            return 'Please login to view the movie.'
+            return 'Пожалуйста войдите в аккаунт'
 
 
 class EpisodeSerializers(ModelSerializer):
-    episode = serializers.SerializerMethodField()
+    content = serializers.SerializerMethodField()
 
     class Meta:
         model = Episode
-        fields = ['title', 'number', 'episode']
+        fields = ['title', 'number', 'content', 'poster', 'trailer', 'release_date']
 
-
-    def get_episode(self, obj):
-        if self.context['request'].user.is_authenticated:
-            return f'http://127.0.0.1:8000{obj.episode.url}'
+    def get_content(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            purchase = Purchase.objects.filter(user=user.id).last()
+            return get_content(user, purchase, obj)
         else:
-            return 'Please login to view the episode.'
+            return 'Пожалуйста войдите в аккаунт'
 
 
 class TVShowDetailSerializers(ModelSerializer):
@@ -111,4 +115,3 @@ class DirectorDetailSerializers(ModelSerializer):
     class Meta:
         model = Actor
         fields = ['first_name', 'last_name', 'date_of_birth', 'photo', 'movies', 'tvshows', 'biography']
-

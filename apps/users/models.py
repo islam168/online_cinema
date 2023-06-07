@@ -14,13 +14,14 @@ class Subscription(models.Model):
     description = models.CharField(verbose_name='Описание', max_length=256)
     price = models.IntegerField(verbose_name='Цена')
     active = models.BooleanField(verbose_name='Активный', default=True)
+    content_access_day = models.IntegerField(verbose_name='Через сколько дней доступен, контент', default=0)
 
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
 
     def __str__(self):
-        return self.title
+        return f'{self.title}, Дней до открытия контента: {self.content_access_day}'
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -30,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(verbose_name='Дата рождения', auto_now_add=True)
     genre = models.ManyToManyField(verbose_name='Подписка',
                                    to=Genre,
-                                   related_name='users')
+                                   related_name='users', blank=True)
     is_active = models.BooleanField(verbose_name='Активный', default=True)
     is_staff = models.BooleanField(verbose_name='Сотрудник', default=False)
 

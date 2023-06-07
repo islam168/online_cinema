@@ -46,6 +46,7 @@ class UserAuthAPIVIew(GenericAPIView):
 
 
 class UserListCreateAPIView(ListCreateAPIView):
+    permission_classes = [AllowAny]
     queryset = User.objects.all()
 
     def get(self, request, *args, **kwargs):

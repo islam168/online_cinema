@@ -1,23 +1,31 @@
-#
-# from rest_framework.response import Response
-# from .models import Movie, TVShow
-# from .serializers import MovieListSerializers, TVShowListSerializers
-#
-#
-# def movies_and_tv_shows():
-#     serializer_class_Movie = MovieListSerializers
-#     serializer_class_TVShow = TVShowListSerializers
-#
-#     def get_queryset_Movie(self):
-#         return Movie.objects.all()
-#
-#     def get_queryset_TVShows(self):
-#         return TVShow.objects.all()
-#
-#     def list(self, request, *args, **kwargs):
-#         movie = self.serializer_class_Movie(self.get_queryset_Movie(), many=True)
-#         tvshow = self.serializer_class_TVShow(self.get_queryset_TVShows(), many=True)
-#         return Response({
-#             "MOVIE": movie.data,
-#             "TVSHOW": tvshow.data
-#         })
+from apps.users.models import Subscription
+from datetime import datetime, timedelta
+
+
+def get_content(user, purchase, obj):
+    release_date = obj.release_date
+    content = obj.content.url
+    if purchase is not None:
+        purchase = str(purchase)
+        purchase_date = purchase.split('Дата покупки: ')[1]
+        dt = datetime.strptime(purchase_date, '%Y-%m-%d')
+        result = (dt + timedelta(days=30)).strftime('%Y-%m-%d')
+        if purchase_date > result:
+            return f'Пожалуйста обновите свою подписку, дата оформления вашей подписки {purchase_date}. ' \
+                   f'Срок окончания был {result}'
+        else:
+            subs_title = purchase.split('Подписка: ')[1].split(',')[0]
+            subs = str(Subscription.objects.filter(title=subs_title).first())
+            subs_day = subs.split('контента: ')[1]
+            day = (release_date + timedelta(days=int(subs_day))).strftime('%Y-%m-%d')
+            today = datetime.today().strftime('%Y-%m-%d')
+            if today >= day:
+                return f'http://127.0.0.1:8000{content}'
+            else:
+                difference = (datetime.strptime(day, "%Y-%m-%d").date() -
+                              datetime.strptime(today, "%Y-%m-%d").date()).days
+                return f'Эпизод будет доступен через {difference} день'
+
+    else:
+        return 'Пожалуйста купите подписку'
+

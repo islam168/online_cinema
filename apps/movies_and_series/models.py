@@ -59,7 +59,7 @@ class Movie(models.Model):
     poster = models.ImageField(verbose_name='Постер',
                                upload_to=upload_instance,
                                blank=True, null=True)
-    movie = models.FileField(verbose_name='Фильм', upload_to=videos_uploaded, null=True, blank=True,
+    content = models.FileField(verbose_name='Фильм', upload_to=videos_uploaded, null=True, blank=True,
                              validators=[FileExtensionValidator
                                          (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     trailer = models.URLField(verbose_name='Трейлер')
@@ -119,9 +119,10 @@ class Episode(models.Model):
                                validators=[FileExtensionValidator
                                            (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     title = models.CharField(verbose_name='Название', null=True, blank=True)
-    episode = models.FileField(verbose_name='Эпизод', upload_to=videos_uploaded, null=False,
+    content = models.FileField(verbose_name='Эпизод', upload_to=videos_uploaded, null=False,
                                validators=[FileExtensionValidator
                                            (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
+    release_date = models.DateField(verbose_name='Дата выхода на сайте', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Эпизод'
