@@ -1,8 +1,24 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import Movie, TVShow, Genre, Actor, Director, Episode
-from apps.users.models import Purchase, User
+from apps.users.models import Purchase, User, MovieReview, TVShowReview
 from .services import get_content
+
+
+class MovieReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = MovieReview
+        fields = ['user', 'rating', 'text']
+
+
+class TVShowReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = TVShowReview
+        fields = ['user', 'rating', 'text']
 
 
 class GenreSerializers(ModelSerializer):
@@ -36,11 +52,13 @@ class MovieDetailSerializers(ModelSerializer):
     actor = ActorSerializers(many=True, read_only=True)
     director = DirectorSerializers(many=True, read_only=True)
     content = serializers.SerializerMethodField()
+    moviereview = MovieReviewSerializer(many=True)
+
 
     class Meta:
         model = Movie
-        fields = ('title', 'poster', 'content', 'description', 'trailer',
-                  'release_date', 'genre', 'director', 'actor', 'age_rating')
+        fields = ('id', 'title', 'poster', 'content', 'description', 'trailer',
+                  'release_date', 'genre', 'director', 'actor', 'age_rating', 'moviereview')
 
     def get_content(self, obj):
         age_rat = obj.age_rating
@@ -53,13 +71,13 @@ class MovieDetailSerializers(ModelSerializer):
             return 'Пожалуйста войдите в аккаунт'
 
 
+
 class EpisodeSerializers(ModelSerializer):
     content = serializers.SerializerMethodField()
 
     class Meta:
         model = Episode
         fields = ['title', 'number', 'content', 'poster', 'trailer', 'release_date', 'tv_show_title']
-
 
     def get_content(self, obj):
         age_rat = TVShow.objects.get(id=obj.tv_show_title.id).age_rating
@@ -77,12 +95,12 @@ class TVShowDetailSerializers(ModelSerializer):
     actor = ActorSerializers(many=True, read_only=True)
     director = DirectorSerializers(many=True, read_only=True)
     episodes = EpisodeSerializers(many=True, read_only=True)
+    tvshowreview = TVShowReviewSerializer(many=True)
 
     class Meta:
         model = TVShow
         fields = ('id', 'title', 'poster', 'season', 'episodes', 'description', 'trailer',
-                  'release_date', 'genre', 'director', 'actor', 'age_rating')
-
+                  'release_date', 'genre', 'director', 'actor', 'age_rating', 'tvshowreview')
 
 
 class TVShowListSerializers(ModelSerializer):
@@ -121,3 +139,5 @@ class DirectorDetailSerializers(ModelSerializer):
     class Meta:
         model = Actor
         fields = ['first_name', 'last_name', 'date_of_birth', 'photo', 'movies', 'tvshows', 'biography']
+
+

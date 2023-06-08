@@ -7,7 +7,6 @@ from .models import Movie, TVShow, Director, Actor
 from .serializers import MovieListSerializers, TVShowListSerializers, \
     MovieDetailSerializers, TVShowDetailSerializers, ActorSerializers, \
     DirectorSerializers, ActorDetailSerializers, DirectorDetailSerializers
-from apps.users.serializers import MovieReviewSerializer, TVShowReviewSerializer
 from rest_framework import mixins
 
 
@@ -59,22 +58,6 @@ class MovieListAPIView(ListAPIView):
     queryset = Movie.objects.all()
 
 
-# ListCreateRetrieveUpdateDestroyAPIView
-class MovieDetailAPIView(RetrieveAPIView):
-    permission_classes = [AllowAny]
-    queryset = Movie.objects.all()
-    lookup_field = 'id'
-    serializer_class = MovieDetailSerializers
-
-    # def get(self, request, *args, **kwargs):
-    #     self.serializer_class = MovieReviewSerializer
-    #     return super().get(request, *args, **kwargs)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     self.serializer_class = MovieReviewSerializer
-    #     return super().post(request, *args, **kwargs)
-
-
 class TVShowDetailAPIView(RetrieveAPIView):
     permission_classes = [AllowAny]
     serializer_class = TVShowDetailSerializers
@@ -112,3 +95,12 @@ class ActorListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = ActorSerializers
     queryset = Actor.objects.all()
+
+
+# ListCreateRetrieveUpdateDestroyAPIView
+class MovieDetailAPIView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = Movie.objects.all()
+    serializer_class = MovieDetailSerializers
+    lookup_field = 'id'
+

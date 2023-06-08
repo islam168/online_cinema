@@ -76,7 +76,7 @@ class Purchase(models.Model):
 
 
 class MovieReview(models.Model):
-    text = models.CharField(verbose_name='Текст отзыва', max_length=512)
+    text = models.CharField(verbose_name='Текст отзыва', max_length=512, blank=True)
     rating = models.IntegerField(verbose_name='Оценка',
                                  validators=[
                                      MinValueValidator(1, message='Оценка не менее 1'),
@@ -100,7 +100,7 @@ class MovieReview(models.Model):
 
 
 class TVShowReview(models.Model):
-    text = models.CharField(verbose_name='Текст отзыва', max_length=512)
+    text = models.CharField(verbose_name='Текст отзыва', max_length=512, blank=True)
     rating = models.IntegerField(verbose_name='Оценка',
                                  validators=[
                                      MinValueValidator(1, message='Оценка не менее 1'),
@@ -110,7 +110,7 @@ class TVShowReview(models.Model):
                              to=User,
                              on_delete=models.CASCADE,
                              related_name='tvshowreview')
-    tvshow = models.ForeignKey(verbose_name='Фильм',
+    tvshow = models.ForeignKey(verbose_name='Сериал',
                                to=TVShow,
                                on_delete=models.CASCADE,
                                related_name='tvshowreview')

@@ -4,7 +4,10 @@ from datetime import datetime, timedelta, date
 
 def get_content(user, purchase, user_date_of_birth, age_rat, obj):
     release_date = obj.release_date
-    content = obj.content.url
+    try:
+        content = obj.content.url
+    except ValueError:
+        content = ''
     today = date.today()
     user_age = today.year - user_date_of_birth.year
     if today.month < user_date_of_birth.month or (today.month == user_date_of_birth.month
@@ -30,6 +33,8 @@ def get_content(user, purchase, user_date_of_birth, age_rat, obj):
                 day = (release_date + timedelta(days=int(subs_day))).strftime('%Y-%m-%d')
                 today = today.strftime('%Y-%m-%d')
                 if today >= day:
+                    if content == '':
+                        return 'Контент ещё не вышел'
                     return f'http://127.0.0.1:8000{content}'
                 else:
                     difference = (datetime.strptime(day, "%Y-%m-%d").date() -

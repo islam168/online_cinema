@@ -27,7 +27,7 @@ class UserAuthAPIVIew(GenericAPIView):
             username=serializer.data['email'],
             password=serializer.data['password'],
         )
-        print(serializer.data['password'])
+        print(serializer.data['id'])
 
         if not user:
             return Response(
