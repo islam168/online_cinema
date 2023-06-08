@@ -45,7 +45,7 @@ class MovieDetailSerializers(ModelSerializer):
     def get_content(self, obj):
         user = self.context['request'].user
         if user.is_authenticated:
-            purchase = list(Purchase.objects.filter(user=user.id))
+            purchase = Purchase.objects.filter(user=user.id).last()
             return get_content(user, purchase, obj)
         else:
             return 'Пожалуйста войдите в аккаунт'

@@ -9,14 +9,15 @@ def get_content(user, purchase, obj):
         purchase = str(purchase)
         purchase_date = purchase.split('Дата покупки: ')[1]
         dt = datetime.strptime(purchase_date, '%Y-%m-%d')
-        result = (dt + timedelta(days=30)).strftime('%Y-%m-%d')
+        subs_title = purchase.split('Подписка: ')[1].split(',')[0]
+        subs = str(Subscription.objects.filter(title=subs_title).first())
+        duration = str(subs.split('Длительность: ')[1])
+        result = (dt + timedelta(days=int(duration))).strftime('%Y-%m-%d')
         if purchase_date > result:
             return f'Пожалуйста обновите свою подписку, дата оформления вашей подписки {purchase_date}. ' \
                    f'Срок окончания был {result}'
         else:
-            subs_title = purchase.split('Подписка: ')[1].split(',')[0]
-            subs = str(Subscription.objects.filter(title=subs_title).first())
-            subs_day = subs.split('контента: ')[1]
+            subs_day = subs.split('контента: ')[1].split(',')[0]
             day = (release_date + timedelta(days=int(subs_day))).strftime('%Y-%m-%d')
             today = datetime.today().strftime('%Y-%m-%d')
             if today >= day:

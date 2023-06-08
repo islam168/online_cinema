@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import EmailField, CharField
 
-from apps.users.models import User
+from apps.users.models import User, Purchase, Subscription
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -19,3 +19,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserAuthSerializer(serializers.Serializer):
     email = EmailField(required=True)
     password = CharField(max_length=128, required=True)
+
+
+class SubscriptionSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ['id', 'title', 'description', 'price', 'content_access_day', 'duration']
+
+
+class PurchaseSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Purchase
+        fields = ['user', 'subscription']
+

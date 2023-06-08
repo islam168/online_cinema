@@ -15,13 +15,14 @@ class Subscription(models.Model):
     price = models.IntegerField(verbose_name='Цена')
     active = models.BooleanField(verbose_name='Активный', default=True)
     content_access_day = models.IntegerField(verbose_name='Через сколько дней доступен, контент', default=0)
+    duration = models.IntegerField(verbose_name='Длительность', default=30)
 
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
 
     def __str__(self):
-        return f'{self.title}, Дней до открытия контента: {self.content_access_day}'
+        return f'{self.title}, Дней до открытия контента: {self.content_access_day}, Длительность: {self.duration}'
 
 
 class User(AbstractBaseUser, PermissionsMixin):
