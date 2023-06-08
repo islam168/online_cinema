@@ -4,13 +4,15 @@ from rest_framework.generics import (
     GenericAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView,
 )
 from rest_framework.permissions import AllowAny
+from .permissions import IsOwner
 from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
 from apps.users.authentication import token_expire_handler, expires_in
 from apps.users.models import User, Purchase, Subscription
 from apps.users.serializers import (
-    UserSerializer, UserAuthSerializer, UserCreateSerializer, PurchaseSerializer, SubscriptionSerializers
+    UserSerializer, UserAuthSerializer, UserCreateSerializer, PurchaseSerializer, SubscriptionSerializers,
+    UserUpdateSerializer
 )
 
 
@@ -21,11 +23,11 @@ class UserAuthAPIVIew(GenericAPIView):
     def post(self, request, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         user = authenticate(
             username=serializer.data['email'],
             password=serializer.data['password'],
         )
+        print(serializer.data['password'])
 
         if not user:
             return Response(
@@ -58,9 +60,14 @@ class UserListCreateAPIView(ListCreateAPIView):
 
 
 class UserDetailDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsOwner]
     lookup_field = 'id'
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        self.serializer_class = UserUpdateSerializer
+        return self.update(request, *args, **kwargs)
 
 
 class PurchaseAPIView(CreateAPIView):

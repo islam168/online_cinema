@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from rest_framework.fields import EmailField, CharField
 
-from apps.users.models import User, Purchase, Subscription
+from apps.users.models import User, Purchase, Subscription, MovieReview, TVShowReview
+from apps.movies_and_series.serializers import GenreSerializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    genre = GenreSerializers(many=True, read_only=True)
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'date_of_birth', 'genre')
@@ -13,8 +15,14 @@ class UserSerializer(serializers.ModelSerializer):
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'password', 'date_of_birth', 'genre')
+        fields = ('first_name', 'last_name', 'email', 'password', 'date_of_birth', 'genre')
 
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'date_of_birth', 'genre')
 
 class UserAuthSerializer(serializers.Serializer):
     email = EmailField(required=True)
@@ -34,3 +42,18 @@ class PurchaseSerializer(serializers.ModelSerializer):
         model = Purchase
         fields = ['user', 'subscription']
 
+
+class MovieReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = MovieReview
+        fields = ['user', 'movie', 'rating', 'text']
+
+
+class TVShowReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = TVShowReview
+        fields = ['user', 'tvshow', 'rating', 'text']

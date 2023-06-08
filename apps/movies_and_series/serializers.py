@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import Movie, TVShow, Genre, Actor, Director, Episode
-from apps.users.models import Purchase
+from apps.users.models import Purchase, User
 from .services import get_content
 
 
@@ -43,10 +43,12 @@ class MovieDetailSerializers(ModelSerializer):
                   'release_date', 'genre', 'director', 'actor', 'age_rating')
 
     def get_content(self, obj):
+        age_rat = obj.age_rating
         user = self.context['request'].user
         if user.is_authenticated:
             purchase = Purchase.objects.filter(user=user.id).last()
-            return get_content(user, purchase, obj)
+            user_date_of_birth = User.objects.get(email=user).date_of_birth
+            return get_content(user, purchase, user_date_of_birth, age_rat, obj)
         else:
             return 'Пожалуйста войдите в аккаунт'
 
@@ -56,13 +58,16 @@ class EpisodeSerializers(ModelSerializer):
 
     class Meta:
         model = Episode
-        fields = ['title', 'number', 'content', 'poster', 'trailer', 'release_date']
+        fields = ['title', 'number', 'content', 'poster', 'trailer', 'release_date', 'tv_show_title']
+
 
     def get_content(self, obj):
+        age_rat = TVShow.objects.get(id=obj.tv_show_title.id).age_rating
         user = self.context['request'].user
         if user.is_authenticated:
             purchase = Purchase.objects.filter(user=user.id).last()
-            return get_content(user, purchase, obj)
+            user_date_of_birth = User.objects.get(email=user).date_of_birth
+            return get_content(user, purchase, user_date_of_birth, age_rat, obj)
         else:
             return 'Пожалуйста войдите в аккаунт'
 
@@ -75,8 +80,9 @@ class TVShowDetailSerializers(ModelSerializer):
 
     class Meta:
         model = TVShow
-        fields = ('title', 'poster', 'season', 'episodes', 'description', 'trailer',
+        fields = ('id', 'title', 'poster', 'season', 'episodes', 'description', 'trailer',
                   'release_date', 'genre', 'director', 'actor', 'age_rating')
+
 
 
 class TVShowListSerializers(ModelSerializer):

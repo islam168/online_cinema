@@ -1,5 +1,5 @@
 from rest_framework.generics import (
-    ListAPIView, RetrieveAPIView
+    ListAPIView, RetrieveAPIView, GenericAPIView
 )
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -7,6 +7,30 @@ from .models import Movie, TVShow, Director, Actor
 from .serializers import MovieListSerializers, TVShowListSerializers, \
     MovieDetailSerializers, TVShowDetailSerializers, ActorSerializers, \
     DirectorSerializers, ActorDetailSerializers, DirectorDetailSerializers
+from apps.users.serializers import MovieReviewSerializer, TVShowReviewSerializer
+from rest_framework import mixins
+
+
+class ListCreateRetrieveUpdateDestroyAPIView(mixins.ListModelMixin,
+                                             mixins.CreateModelMixin,
+                                             mixins.UpdateModelMixin,
+                                             mixins.DestroyModelMixin,
+                                             GenericAPIView):
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class MovieTVShowListAPIView(ListAPIView):
@@ -16,6 +40,7 @@ class MovieTVShowListAPIView(ListAPIView):
 
     def get_queryset_movie(self):
         return Movie.objects.all()
+
     def get_queryset_tv_show(self):
         return TVShow.objects.all()
 
@@ -34,11 +59,20 @@ class MovieListAPIView(ListAPIView):
     queryset = Movie.objects.all()
 
 
+# ListCreateRetrieveUpdateDestroyAPIView
 class MovieDetailAPIView(RetrieveAPIView):
     permission_classes = [AllowAny]
     queryset = Movie.objects.all()
     lookup_field = 'id'
     serializer_class = MovieDetailSerializers
+
+    # def get(self, request, *args, **kwargs):
+    #     self.serializer_class = MovieReviewSerializer
+    #     return super().get(request, *args, **kwargs)
+    #
+    # def post(self, request, *args, **kwargs):
+    #     self.serializer_class = MovieReviewSerializer
+    #     return super().post(request, *args, **kwargs)
 
 
 class TVShowDetailAPIView(RetrieveAPIView):

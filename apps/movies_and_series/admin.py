@@ -20,11 +20,11 @@ class MovieAdmin(admin.ModelAdmin):
     get_poster.short_description = 'Постер'
 
     def get_movie(self, obj):
-        if not obj.movie:
+        if not obj.content:
             return "Фильм ещё не загружен"
         else:
             return format_html(f'<video width="250" height="150" controls="controls">'
-                               f'<source src="/media/{obj.movie}" type="video/mp4;">'
+                               f'<source src="/media/{obj.content}" type="video/mp4;">'
                                f'</video>')
 
     get_movie.short_description = 'Фильм'
@@ -80,7 +80,7 @@ class EpisodeAdmin(admin.ModelAdmin):
 
     def get_episode(self, obj):
         return format_html(f'<video width="250" height="150" controls="controls" poster="{obj.poster.url}">'
-                           f'<source src="/media/{obj.episode}" type="video/mp4;">'
+                           f'<source src="/media/{obj.content}" type="video/mp4;">'
                            f'</video>')
 
     get_episode.short_description = 'Эпизод'
