@@ -43,4 +43,18 @@ class PurchaseSerializer(serializers.ModelSerializer):
         fields = ['user', 'subscription']
 
 
+class CreateMovieReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = MovieReview
+        fields = ['user', 'rating', 'text']
+
+
+class CreateTVShowReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = TVShowReview
+        fields = ['user', 'rating', 'text']
 

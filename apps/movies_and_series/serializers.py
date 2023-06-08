@@ -5,8 +5,14 @@ from apps.users.models import Purchase, User, MovieReview, TVShowReview
 from .services import get_content
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name']
+
+
 class MovieReviewSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = UserSerializer()
 
     class Meta:
         model = MovieReview
@@ -14,12 +20,11 @@ class MovieReviewSerializer(serializers.ModelSerializer):
 
 
 class TVShowReviewSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = UserSerializer()
 
     class Meta:
         model = TVShowReview
         fields = ['user', 'rating', 'text']
-
 
 class GenreSerializers(ModelSerializer):
     class Meta:
@@ -53,7 +58,6 @@ class MovieDetailSerializers(ModelSerializer):
     director = DirectorSerializers(many=True, read_only=True)
     content = serializers.SerializerMethodField()
     moviereview = MovieReviewSerializer(many=True)
-
 
     class Meta:
         model = Movie
