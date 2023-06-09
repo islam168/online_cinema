@@ -18,12 +18,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('first_name', 'last_name', 'email', 'password', 'date_of_birth', 'genre')
 
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
+
 
 class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'date_of_birth', 'genre')
+
 
 class UserAuthSerializer(serializers.Serializer):
     email = EmailField(required=True)
@@ -42,20 +46,3 @@ class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
         fields = ['user', 'subscription']
-
-
-class CreateMovieReviewSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    class Meta:
-        model = MovieReview
-        fields = ['user', 'rating', 'text']
-
-
-class CreateTVShowReviewSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    class Meta:
-        model = TVShowReview
-        fields = ['user', 'rating', 'text']
-

@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from django.core.validators import FileExtensionValidator
 from apps.movies_and_series.utils import upload_instance, videos_uploaded
 
@@ -24,9 +23,6 @@ class Director(models.Model):
                               blank=False, null=False)
     biography = models.CharField(verbose_name='Биография', max_length=512)
 
-    # movie =
-    # tv_shows =
-
     class Meta:
         verbose_name = 'Режиссер'
         verbose_name_plural = 'Режиссеры'
@@ -43,8 +39,6 @@ class Actor(models.Model):
                               upload_to=upload_instance,
                               blank=False, null=False)
     biography = models.CharField(verbose_name='Биография', max_length=512)
-    # movie =
-    # tv_shows =
 
     class Meta:
         verbose_name = 'Актер'

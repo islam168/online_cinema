@@ -166,3 +166,31 @@ class DirectorDetailSerializers(ModelSerializer):
         fields = ['first_name', 'last_name', 'date_of_birth', 'photo', 'movies', 'tvshows', 'biography']
 
 
+class CreateMovieReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = MovieReview
+        fields = ['user', 'rating', 'text', 'movie']
+
+
+class CreateTVShowReviewSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = TVShowReview
+        fields = ['user', 'rating', 'text', 'tvshow']
+
+
+class UpdateDestroyMovieReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MovieReview
+        fields = ['rating', 'text']
+
+
+class UpdateDestroyTVShowReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TVShowReview
+        fields = ['rating', 'text']

@@ -1,6 +1,5 @@
 from apps.users.models import Subscription
 from datetime import datetime, timedelta, date
-from django.db.models import Avg
 
 
 def get_content(user, purchase, user_date_of_birth, age_rat, obj):

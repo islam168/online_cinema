@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from rest_framework import response, status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import (
     GenericAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView,
@@ -49,14 +50,18 @@ class UserAuthAPIVIew(GenericAPIView):
 class UserListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
     queryset = User.objects.all()
+    serializer_class = UserCreateSerializer
 
     def get(self, request, *args, **kwargs):
         self.serializer_class = UserSerializer
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.serializer_class = UserCreateSerializer
-        return super().post(request, *args, **kwargs)
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserDetailDestroyAPIView(RetrieveUpdateDestroyAPIView):
