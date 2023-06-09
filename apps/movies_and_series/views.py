@@ -7,35 +7,16 @@ from .models import Movie, TVShow, Director, Actor
 from .serializers import MovieListSerializers, TVShowListSerializers, \
     MovieDetailSerializers, TVShowDetailSerializers, ActorSerializers, \
     DirectorSerializers, ActorDetailSerializers, DirectorDetailSerializers
-from rest_framework import mixins
-
-
-class ListCreateRetrieveUpdateDestroyAPIView(mixins.ListModelMixin,
-                                             mixins.CreateModelMixin,
-                                             mixins.UpdateModelMixin,
-                                             mixins.DestroyModelMixin,
-                                             GenericAPIView):
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class MovieTVShowListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     serializer_class_Movie = MovieListSerializers
     serializer_class_TVShow = TVShowListSerializers
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('title', '=rating', '=genre__name')
+
 
     def get_queryset_movie(self):
         return Movie.objects.all()
@@ -56,6 +37,8 @@ class MovieListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = MovieListSerializers
     queryset = Movie.objects.all()
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('title', '=rating', '=genre__name')
 
 
 class TVShowDetailAPIView(RetrieveAPIView):
@@ -69,6 +52,8 @@ class TVShowListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = TVShowListSerializers
     queryset = TVShow.objects.all()
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('title', '=rating', '=genre__name')
 
 
 class DirectorListAPIView(ListAPIView):
@@ -103,4 +88,6 @@ class MovieDetailAPIView(RetrieveAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieDetailSerializers
     lookup_field = 'id'
+
+
 

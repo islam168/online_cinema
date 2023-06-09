@@ -9,7 +9,7 @@ AdminSite.site_header = 'Администрирование ONLINE CINEMA'
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('title', 'get_poster', 'get_movie', 'trailer', 'description',
+    list_display = ('title', 'get_poster', 'rating', 'get_movie', 'trailer', 'description',
                     'release_date', 'get_genre', 'get_director', 'get_actor', 'age_rating')
     search_fields = ['title']
 
@@ -47,7 +47,7 @@ class MovieAdmin(admin.ModelAdmin):
 
 @admin.register(TVShow)
 class TVShowAdmin(admin.ModelAdmin):
-    list_display = ('title', 'get_poster', 'season', 'trailer', 'description',
+    list_display = ('title', 'get_poster', 'rating', 'season', 'trailer', 'description',
                     'release_date', 'get_genre', 'get_director', 'get_actor', 'age_rating')
     search_fields = ['title']
 

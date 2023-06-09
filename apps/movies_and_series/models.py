@@ -59,9 +59,10 @@ class Movie(models.Model):
     poster = models.ImageField(verbose_name='Постер',
                                upload_to=upload_instance,
                                blank=True, null=True)
+    rating = models.FloatField(verbose_name='Рейтинг', default=10)
     content = models.FileField(verbose_name='Фильм', upload_to=videos_uploaded, null=True, blank=True,
-                             validators=[FileExtensionValidator
-                                         (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
+                               validators=[FileExtensionValidator
+                                           (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     trailer = models.URLField(verbose_name='Трейлер')
     description = models.CharField(verbose_name='Описание', max_length=512)
     release_date = models.DateField(verbose_name='Дата выхода на сайте', null=True, blank=True)
@@ -87,6 +88,7 @@ class TVShow(models.Model):
                                upload_to=upload_instance,
                                blank=True, null=True)
     season = models.IntegerField(verbose_name='Номер сезона')
+    rating = models.FloatField(verbose_name='Рейтинг', default=10)
     trailer = models.URLField(verbose_name='Трейлер')
     description = models.CharField(verbose_name='Описание', max_length=512)
     release_date = models.DateField(verbose_name='Дата выхода на сайте', null=True, blank=True)

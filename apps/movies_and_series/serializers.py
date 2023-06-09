@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer
 from .models import Movie, TVShow, Genre, Actor, Director, Episode
 from apps.users.models import Purchase, User, MovieReview, TVShowReview
 from .services import get_content
+from django.db.models import Avg
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,6 +26,7 @@ class TVShowReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = TVShowReview
         fields = ['user', 'rating', 'text']
+
 
 class GenreSerializers(ModelSerializer):
     class Meta:
@@ -49,7 +51,7 @@ class MovieListSerializers(ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('title', 'poster', 'description', 'release_date', 'genre', 'age_rating')
+        fields = ('title', 'poster', 'rating', 'description', 'release_date', 'genre', 'age_rating')
 
 
 class MovieDetailSerializers(ModelSerializer):
@@ -58,11 +60,21 @@ class MovieDetailSerializers(ModelSerializer):
     director = DirectorSerializers(many=True, read_only=True)
     content = serializers.SerializerMethodField()
     moviereview = MovieReviewSerializer(many=True)
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
-        fields = ('id', 'title', 'poster', 'content', 'description', 'trailer',
-                  'release_date', 'genre', 'director', 'actor', 'age_rating', 'moviereview')
+        fields = ('id', 'title', 'rating', 'poster', 'content', 'description', 'trailer',
+                  'release_date', 'genre', 'director', 'actor', 'moviereview')
+
+    def get_rating(self, obj):
+        reviews = obj.moviereview.all()
+        if reviews:
+            average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+            obj.rating = average_rating or 0
+            obj.save()
+            return obj.rating
+        return 0
 
     def get_content(self, obj):
         age_rat = obj.age_rating
@@ -73,7 +85,6 @@ class MovieDetailSerializers(ModelSerializer):
             return get_content(user, purchase, user_date_of_birth, age_rat, obj)
         else:
             return 'Пожалуйста войдите в аккаунт'
-
 
 
 class EpisodeSerializers(ModelSerializer):
@@ -100,11 +111,21 @@ class TVShowDetailSerializers(ModelSerializer):
     director = DirectorSerializers(many=True, read_only=True)
     episodes = EpisodeSerializers(many=True, read_only=True)
     tvshowreview = TVShowReviewSerializer(many=True)
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         model = TVShow
-        fields = ('id', 'title', 'poster', 'season', 'episodes', 'description', 'trailer',
+        fields = ('id', 'title', 'poster', 'rating', 'season', 'episodes', 'description', 'trailer',
                   'release_date', 'genre', 'director', 'actor', 'age_rating', 'tvshowreview')
+
+    def get_rating(self, obj):
+        reviews = obj.tvshowreview.all()
+        if reviews:
+            average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+            obj.rating = average_rating or 0
+            obj.save()
+            return obj.rating
+        return 0
 
 
 class TVShowListSerializers(ModelSerializer):
@@ -112,19 +133,19 @@ class TVShowListSerializers(ModelSerializer):
 
     class Meta:
         model = TVShow
-        fields = ('title', 'poster', 'description', 'release_date', 'genre', 'age_rating')
+        fields = ('title', 'poster', 'rating', 'description', 'release_date', 'genre', 'age_rating')
 
 
 class MovieSerializers(ModelSerializer):
     class Meta:
         model = Movie
-        fields = ('title',)
+        fields = ('title', 'genre', 'rating')
 
 
 class TVShowSerializers(ModelSerializer):
     class Meta:
         model = TVShow
-        fields = ('title',)
+        fields = ('title', 'genre', 'rating')
 
 
 class ActorDetailSerializers(ModelSerializer):

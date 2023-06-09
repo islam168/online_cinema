@@ -7,6 +7,7 @@ from apps.movies_and_series.serializers import GenreSerializers
 
 class UserSerializer(serializers.ModelSerializer):
     genre = GenreSerializers(many=True, read_only=True)
+    
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'date_of_birth', 'genre')
