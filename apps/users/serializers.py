@@ -22,6 +22,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
+class UserChangePasswordSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = User
+        fields = ('user', 'password')
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance
+
+
 class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -45,4 +58,4 @@ class PurchaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Purchase
-        fields = ['user', 'subscription']
+        fields = ['id', 'user', 'subscription']

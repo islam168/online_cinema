@@ -30,9 +30,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(verbose_name='Фамилия', max_length=128)
     email = models.EmailField(verbose_name='Почта', unique=True)
     date_of_birth = models.DateField(verbose_name='Дата рождения', auto_now_add=True)
-    genre = models.ManyToManyField(verbose_name='Подписка',
-                                   to=Genre,
-                                   related_name='users', blank=True)
     is_active = models.BooleanField(verbose_name='Активный', default=True)
     is_staff = models.BooleanField(verbose_name='Сотрудник', default=False)
 

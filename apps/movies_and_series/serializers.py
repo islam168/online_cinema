@@ -17,7 +17,7 @@ class MovieReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieReview
-        fields = ['user', 'rating', 'text']
+        fields = ['id', 'user', 'rating', 'text']
 
 
 class TVShowReviewSerializer(serializers.ModelSerializer):
@@ -25,25 +25,25 @@ class TVShowReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TVShowReview
-        fields = ['user', 'rating', 'text']
+        fields = ['id', 'user', 'rating', 'text']
 
 
 class GenreSerializers(ModelSerializer):
     class Meta:
         model = Genre
-        fields = ('name',)
+        fields = ('id', 'name',)
 
 
 class ActorSerializers(ModelSerializer):
     class Meta:
         model = Actor
-        fields = ['first_name', 'last_name']
+        fields = ['id', 'first_name', 'last_name']
 
 
 class DirectorSerializers(ModelSerializer):
     class Meta:
         model = Director
-        fields = ['first_name', 'last_name']
+        fields = ['id', 'first_name', 'last_name']
 
 
 class MovieListSerializers(ModelSerializer):
@@ -51,7 +51,7 @@ class MovieListSerializers(ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('title', 'poster', 'rating', 'description', 'release_date', 'genre', 'age_rating')
+        fields = ('id', 'title', 'poster', 'rating', 'description', 'release_date', 'genre', 'age_rating')
 
 
 class MovieDetailSerializers(ModelSerializer):
@@ -64,8 +64,8 @@ class MovieDetailSerializers(ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('id', 'title', 'rating', 'poster', 'content', 'description', 'trailer',
-                  'release_date', 'genre', 'director', 'actor', 'moviereview')
+        fields = ['id', 'id', 'title', 'rating', 'poster', 'content', 'description', 'trailer',
+                  'release_date', 'genre', 'director', 'actor', 'moviereview']
 
     def get_rating(self, obj):
         reviews = obj.moviereview.all()
@@ -92,7 +92,7 @@ class EpisodeSerializers(ModelSerializer):
 
     class Meta:
         model = Episode
-        fields = ['title', 'number', 'content', 'poster', 'trailer', 'release_date', 'tv_show_title']
+        fields = ['id', 'title', 'number', 'content', 'poster', 'trailer', 'release_date', 'tv_show_title']
 
     def get_content(self, obj):
         age_rat = TVShow.objects.get(id=obj.tv_show_title.id).age_rating
@@ -115,8 +115,8 @@ class TVShowDetailSerializers(ModelSerializer):
 
     class Meta:
         model = TVShow
-        fields = ('id', 'title', 'poster', 'rating', 'season', 'episodes', 'description', 'trailer',
-                  'release_date', 'genre', 'director', 'actor', 'age_rating', 'tvshowreview')
+        fields = ['id', 'title', 'poster', 'rating', 'season', 'episodes', 'description', 'trailer',
+                  'release_date', 'genre', 'director', 'actor', 'age_rating', 'tvshowreview']
 
     def get_rating(self, obj):
         reviews = obj.tvshowreview.all()
@@ -133,19 +133,19 @@ class TVShowListSerializers(ModelSerializer):
 
     class Meta:
         model = TVShow
-        fields = ('title', 'poster', 'rating', 'description', 'release_date', 'genre', 'age_rating')
+        fields = ('id', 'title', 'poster', 'rating', 'description', 'release_date', 'genre', 'age_rating')
 
 
 class MovieSerializers(ModelSerializer):
     class Meta:
         model = Movie
-        fields = ('title', 'genre', 'rating')
+        fields = ('id', 'title', 'genre', 'rating')
 
 
 class TVShowSerializers(ModelSerializer):
     class Meta:
         model = TVShow
-        fields = ('title', 'genre', 'rating')
+        fields = ('id', 'title', 'genre', 'rating')
 
 
 class ActorDetailSerializers(ModelSerializer):
@@ -154,7 +154,7 @@ class ActorDetailSerializers(ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ['first_name', 'last_name', 'date_of_birth', 'photo', 'movies', 'tvshows', 'biography']
+        fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'photo', 'movies', 'tvshows', 'biography']
 
 
 class DirectorDetailSerializers(ModelSerializer):
@@ -163,7 +163,7 @@ class DirectorDetailSerializers(ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ['first_name', 'last_name', 'date_of_birth', 'photo', 'movies', 'tvshows', 'biography']
+        fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'photo', 'movies', 'tvshows', 'biography']
 
 
 class CreateMovieReviewSerializer(serializers.ModelSerializer):
@@ -186,11 +186,11 @@ class UpdateDestroyMovieReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieReview
-        fields = ['rating', 'text']
+        fields = ['id', 'rating', 'text']
 
 
 class UpdateDestroyTVShowReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TVShowReview
-        fields = ['rating', 'text']
+        fields = ['id', 'rating', 'text']

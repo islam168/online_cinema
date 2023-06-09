@@ -1,10 +1,8 @@
-from rest_framework import response, status
 from rest_framework.generics import (
-    ListAPIView, RetrieveAPIView, GenericAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView
+    ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView
 )
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 
 from .models import Movie, TVShow, Director, Actor
 from .serializers import MovieListSerializers, TVShowListSerializers, \
@@ -14,6 +12,7 @@ from .serializers import MovieListSerializers, TVShowListSerializers, \
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from ..users.models import MovieReview, TVShowReview
+from core.permissions import IsOwnerOfReview
 
 
 class MovieTVShowListAPIView(ListAPIView):
@@ -73,6 +72,7 @@ class DirectorListAPIView(ListAPIView):
     serializer_class = DirectorSerializers
     queryset = Director.objects.all()
 
+
 class DirectorDetailAPIView(RetrieveAPIView):
     permission_classes = [AllowAny]
     serializer_class = DirectorDetailSerializers
@@ -99,6 +99,7 @@ class MovieReviewAPIView(ListCreateAPIView):
 
 
 class MovieReviewDetailAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsOwnerOfReview]
     serializer_class = UpdateDestroyTVShowReviewSerializer
     queryset = MovieReview.objects.all()
     lookup_field = 'id'
@@ -110,6 +111,7 @@ class TVShowReviewAPIView(CreateAPIView):
 
 
 class TVShowReviewDetailAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsOwnerOfReview]
     serializer_class = UpdateDestroyTVShowReviewSerializer
     queryset = TVShowReview.objects.all()
     lookup_field = 'id'

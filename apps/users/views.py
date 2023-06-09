@@ -2,10 +2,10 @@ from django.contrib.auth import authenticate
 from rest_framework import response, status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import (
-    GenericAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView,
+    GenericAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView, ListAPIView, CreateAPIView, RetrieveUpdateAPIView,
 )
 from rest_framework.permissions import AllowAny
-from .permissions import IsOwner
+from core.permissions import IsOwner
 from rest_framework.response import Response
 from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_200_OK
 
@@ -13,7 +13,7 @@ from apps.users.authentication import token_expire_handler, expires_in
 from apps.users.models import User, Purchase, Subscription
 from apps.users.serializers import (
     UserSerializer, UserAuthSerializer, UserCreateSerializer, PurchaseSerializer, SubscriptionSerializers,
-    UserUpdateSerializer
+    UserUpdateSerializer, UserChangePasswordSerializer
 )
 
 
@@ -74,6 +74,12 @@ class UserDetailDestroyAPIView(RetrieveUpdateDestroyAPIView):
         self.serializer_class = UserUpdateSerializer
         return self.update(request, *args, **kwargs)
 
+
+class UserChangePasswordAPIView(RetrieveUpdateAPIView):
+    permission_classes = [IsOwner]
+    lookup_field = 'id'
+    serializer_class = UserChangePasswordSerializer
+    queryset = User.objects.all()
 
 class PurchaseAPIView(CreateAPIView):
     serializer_class = PurchaseSerializer
