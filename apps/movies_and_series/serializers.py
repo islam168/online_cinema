@@ -64,7 +64,7 @@ class MovieDetailSerializers(ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ['id', 'id', 'title', 'rating', 'poster', 'content', 'description', 'trailer',
+        fields = ['id', 'title', 'rating', 'poster', 'content', 'description', 'trailer',
                   'release_date', 'genre', 'director', 'actor', 'moviereview']
 
     def get_rating(self, obj):
@@ -92,7 +92,7 @@ class EpisodeSerializers(ModelSerializer):
 
     class Meta:
         model = Episode
-        fields = ['id', 'title', 'number', 'content', 'poster', 'trailer', 'release_date', 'tv_show_title']
+        fields = ['id', 'title', 'number', 'content', 'poster', 'release_date', 'tv_show_title']
 
     def get_content(self, obj):
         age_rat = TVShow.objects.get(id=obj.tv_show_title.id).age_rating

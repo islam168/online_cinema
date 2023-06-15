@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Главная {% endblock %}
+
+{% block content %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for movie in movies %}
+        <div class="col">
+          <div class="card">
+            <img src="{{ movie.poster.url }}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <a href="movies/{{ movie.id }}" style="text-decoration: none; color: black;">
+                  <h5>{{ movie.title }}</h5></a>
+              <p class="card-text"><strong>Жанры:</strong> {{ movie.genre.all|join:", " }}</p>
+              <p class="card-text"><strong>Рейтинг:</strong> {{ movie.rating }}</p>
+              <p class="card-text"><strong>Возрастной рейтинг:</strong> {{ movie.age_rating }}+</p>
+              <p class="card-text"><strong>Дата выхода:</strong> {{ movie.release_date }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+{% endblock %}

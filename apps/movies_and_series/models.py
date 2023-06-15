@@ -111,9 +111,6 @@ class Episode(models.Model):
     poster = models.ImageField(verbose_name='Постер',
                                upload_to=upload_instance,
                                blank=False, null=False)
-    trailer = models.FileField(verbose_name='Трайлер эпизода', upload_to=videos_uploaded, null=True, blank=True,
-                               validators=[FileExtensionValidator
-                                           (allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
     title = models.CharField(verbose_name='Название', null=True, blank=True)
     content = models.FileField(verbose_name='Эпизод', upload_to=videos_uploaded, null=False,
                                validators=[FileExtensionValidator

@@ -15,7 +15,7 @@ class MovieAdmin(admin.ModelAdmin):
 
     def get_poster(self, obj):
         return format_html(f'<img src="{obj.poster.url}" '
-                           f'width="100" height="150" />')
+                           f'width="250" height="150" />')
 
     get_poster.short_description = 'Постер'
 
@@ -53,7 +53,7 @@ class TVShowAdmin(admin.ModelAdmin):
 
     def get_poster(self, obj):
         return format_html(f'<img src="{obj.poster.url}" '
-                           f'width="100" height="150" />')
+                           f'width="250" height="150" />')
 
     get_poster.short_description = 'Постер'
 
@@ -75,23 +75,13 @@ class TVShowAdmin(admin.ModelAdmin):
 
 @admin.register(Episode)
 class EpisodeAdmin(admin.ModelAdmin):
-    list_display = ('tv_show_title', 'number', 'title', 'get_trailer', 'get_episode')
+    list_display = ('tv_show_title', 'number', 'title', 'get_episode')
     search_fields = ['tv_show_title']
 
     def get_episode(self, obj):
         return format_html(f'<video width="250" height="150" controls="controls" poster="{obj.poster.url}">'
                            f'<source src="/media/{obj.content}" type="video/mp4;">'
                            f'</video>')
-
-    get_episode.short_description = 'Эпизод'
-
-    def get_trailer(self, obj):
-        if not obj.trailer:
-            return "Нет трейлера к эпизоду"
-        else:
-            return format_html(f'<video width="250" height="150" controls="controls">'
-                               f'<source src="/media/{obj.trailer}" type="video/mp4;">'
-                               f'</video>')
 
     get_episode.short_description = 'Эпизод'
 
@@ -116,7 +106,7 @@ class ActorAdmin(admin.ModelAdmin):
 
     def get_photo(self, obj):
         return format_html(f'<img src="{obj.photo.url}" '
-                           f'width="180" height="150" />')
+                           f'width="280" height="420" />')
 
     get_photo.short_description = 'Фото'
 

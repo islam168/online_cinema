@@ -1,22 +1,20 @@
 from rest_framework import serializers
 from rest_framework.fields import EmailField, CharField
 
-from apps.users.models import User, Purchase, Subscription, MovieReview, TVShowReview
-from apps.movies_and_series.serializers import GenreSerializers
+from apps.users.models import User, Purchase, Subscription
 
 
 class UserSerializer(serializers.ModelSerializer):
-    genre = GenreSerializers(many=True, read_only=True)
-    
+
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'date_of_birth', 'genre')
+        fields = ('id', 'first_name', 'last_name', 'email', 'date_of_birth')
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password', 'date_of_birth', 'genre')
+        fields = ('first_name', 'last_name', 'email', 'password', 'date_of_birth')
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -39,7 +37,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'date_of_birth', 'genre')
+        fields = ('id', 'first_name', 'last_name', 'date_of_birth')
 
 
 class UserAuthSerializer(serializers.Serializer):
