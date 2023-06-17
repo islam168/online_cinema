@@ -12,7 +12,7 @@
 
 ## Какие технологии использованы
 - Linux
-- Docker
+- PostgreSQL
 - Python 3.10
   - Django 4
   - Django Rest Framework
