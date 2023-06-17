@@ -6,9 +6,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),
     path('admin/', admin.site.urls),
-
     path('api/v1/users/', include('apps.users.urls')),
     path('api/v1/content/', include('apps.movies_and_series.urls')),
+
 ]
 
 if settings.DEBUG:

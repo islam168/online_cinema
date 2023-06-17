@@ -66,7 +66,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 3,
 }
 
 
@@ -122,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-TOKEN_EXPIRED_AFTER_SECONDS = 1000
+TOKEN_EXPIRED_AFTER_SECONDS = 50000
 LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'

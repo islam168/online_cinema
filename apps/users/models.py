@@ -29,7 +29,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name='Имя', max_length=128)
     last_name = models.CharField(verbose_name='Фамилия', max_length=128)
     email = models.EmailField(verbose_name='Почта', unique=True)
-    date_of_birth = models.DateField(verbose_name='Дата рождения', auto_now_add=True)
+    date_of_birth = models.DateField(verbose_name='Дата рождения')
     is_active = models.BooleanField(verbose_name='Активный', default=True)
     is_staff = models.BooleanField(verbose_name='Сотрудник', default=False)
 

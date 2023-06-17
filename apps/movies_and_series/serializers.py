@@ -171,7 +171,7 @@ class CreateMovieReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieReview
-        fields = ['user', 'rating', 'text', 'movie']
+        fields = ['id', 'user', 'rating', 'text', 'movie']
 
 
 class CreateTVShowReviewSerializer(serializers.ModelSerializer):
@@ -179,7 +179,7 @@ class CreateTVShowReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TVShowReview
-        fields = ['user', 'rating', 'text', 'tvshow']
+        fields = ['id', 'user', 'rating', 'text', 'tvshow']
 
 
 class UpdateDestroyMovieReviewSerializer(serializers.ModelSerializer):

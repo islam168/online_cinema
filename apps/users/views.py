@@ -60,7 +60,7 @@ class UserListCreateAPIView(ListCreateAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+            return response.Response('user was successfully created', status=status.HTTP_201_CREATED)
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -80,6 +80,7 @@ class UserChangePasswordAPIView(RetrieveUpdateAPIView):
     lookup_field = 'id'
     serializer_class = UserChangePasswordSerializer
     queryset = User.objects.all()
+
 
 class PurchaseAPIView(CreateAPIView):
     serializer_class = PurchaseSerializer
